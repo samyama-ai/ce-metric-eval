@@ -12,6 +12,12 @@ findings below. It builds on — and credits — a long line of robust-query-opt
 [Relation to prior work](#relation-to-prior-work). It is an **honest measurement + small theorem**, not a
 new SOTA estimator.
 
+![regime taxonomy](figures/flow.png)
+
+*The whole idea in one picture: which plan-cost-geometry quantity predicts plan regret depends on the size
+of the estimation error. All three are summaries of the same plan cost-ratio spectrum $\{r_k\}$; q-error is
+orthogonal to that geometry.*
+
 ![regimes](figures/regimes.png)
 
 *Left: the true-point condition number κ predicts plan regret only for small estimation error, decaying to
@@ -56,6 +62,20 @@ ACS∞(q) ≈ "the typical badness of a random plan for this query." A query who
 dispersed cost spectrum is intrinsically regret-prone under poor estimation, *regardless of which
 estimator is used*. It is the **average-case** companion to Haritsa's **worst-case** MSO (= the single
 worst plan), and unlike q-error it is estimator-independent — a property of the query, not the estimate.
+
+## The geometry, in two pictures
+
+<p align="center"><img src="figures/concept_cells.png" width="61%"></p>
+
+*Log-cardinality space tiles into **plan-optimality cells** (a plan diagram). Small error keeps the
+estimate inside the optimal cell — the **condition number κ** is the distance to the nearest wall. Large
+error lands it in any cell: **ACS∞** averages the cost-ratios over cells, **MSO** takes the worst.*
+
+<p align="center"><img src="figures/flip_margin.png" width="58%"></p>
+
+*The small-error condition number, made concrete: two plans' costs cross at δ = ½·ln(A/B); within δ the
+optimal plan survives, beyond it the plan flips. κ = 1/δ. Figures regenerate via
+`figures/{flow.tex, concept_cells.py, flip_margin.py, make_figures.py}`.*
 
 ## Reproduce
 

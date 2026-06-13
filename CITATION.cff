@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "ce-metric-eval: average-case sub-optimality and the regimes of cardinality-estimation regret"
+abstract: >-
+  A reproducible study and toolkit showing that query-plan regret from cardinality-estimation error is
+  governed by plan-cost geometry in regime-dependent ways: a true-point condition number predicts regret
+  for small errors, an average-case sub-optimality measure (ACS-infinity) predicts it for large errors,
+  and Haritsa's maximum sub-optimality is the worst-case companion. Includes a limit theorem
+  ACS-infinity = sum_k r_k * pi_k with cardinality-independent minimax-rank weights, and pre-registered
+  experiments on STATS-CEB and JOB-light.
+authors:
+  - name: "Samyama"
+keywords:
+  - cardinality estimation
+  - query optimization
+  - plan regret
+  - q-error
+  - average-case sub-optimality
+  - robust query processing
+license: Apache-2.0
+date-released: "2026-06-13"

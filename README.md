@@ -55,6 +55,10 @@ Measured on the standard **STATS-CEB** and **JOB-light** benchmarks with 4 relea
 - **The reconciliation:** the long-running "q-error vs plan-cost" debate is two **regimes** of one
   phenomenon. Real learned estimators straddle the boundary — which is *why* no single scalar error metric
   predicts their regret cleanly.
+- **Validated on real PostgreSQL, not just C_out** (`costmodel/`): injecting each estimator's cardinalities
+  into PostgreSQL 13.1 and measuring *actual runtime regret*, ACS∞ predicts which queries get hurt
+  (ρ = **0.42**, k=3, 110/111 queries) while q-error does not (−0.16); margin 95% CI **[0.34, 0.82]**. The
+  regimes are not an artifact of the simplified cost model.
 
 ## What ACS∞ is, intuitively
 
@@ -76,6 +80,21 @@ error lands it in any cell: **ACS∞** averages the cost-ratios over cells, **MS
 *The small-error condition number, made concrete: two plans' costs cross at δ = ½·ln(A/B); within δ the
 optimal plan survives, beyond it the plan flips. κ = 1/δ. Figures regenerate via
 `figures/{flow.tex, concept_cells.py, flip_margin.py, make_figures.py}`.*
+
+## Validated on real PostgreSQL (not just C_out)
+
+A natural objection: C_out is a simplified cost model — do the regimes survive a real optimizer? We
+re-measured **regret as actual PostgreSQL 13.1 runtime**, injecting each estimator's join cardinalities and
+timing the resulting plan vs. the true-cardinality plan (`costmodel/`).
+
+<p align="center"><img src="figures/runtime_pg.png" width="52%"></p>
+
+ACS∞ — computed purely from C_out geometry, never seeing PostgreSQL — predicts real runtime regret
+(ρ = **0.42**, k=3, full coverage 110/111 queries) while q-error does not (−0.16); margin 95% CI
+**[0.34, 0.82]**. The headline regrets are genuine plan changes (e.g. 32.6 s vs 1.3 s). So the κ/ACS/MSO
+regimes are **not an artifact of the cost model**. We also report a *negative* honestly: a plan-cost (PPC)
+arm via `pg_hint_plan` is **infeasible** because the estimators' bad plans are cardinality-induced
+near-cartesian orders the hint tool won't reproduce. Details + one-command reproduce: `costmodel/README.md`.
 
 ## Reproduce
 
@@ -100,6 +119,8 @@ JOB-light is fully covered).
 - `ce_metric_eval/acs.py`, `acs_limit.py` — **ACS∞** by Monte-Carlo and by the limit law Σ rₖ πₖ.
 - `ce_metric_eval/workload.py` — STATS-CEB (DuckDB true cards) + JOB-light (inline) loaders.
 - `ce_metric_eval/{experiment,confirm,step2}.py` — the pre-registered analyses.
+- `costmodel/` — **real-PostgreSQL** runtime-regret validation (`run_pg.py`, `analyze_pg.py`, `vm_setup.sh`)
+  + the infeasible PPC arm (`run_ppc.py`); see `costmodel/README.md`.
 - `PREREGISTRATION.md` — the frozen hypotheses + decision rules (incl. one honest **rejected** hypothesis
   and one **near-miss**, kept for the record). `THEORY-3.md` — the limit theorem. `paper/note.md` — the
   short writeup.

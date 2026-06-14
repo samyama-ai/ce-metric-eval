@@ -50,3 +50,12 @@ python costmodel/analyze_pg.py                                # ACS_inf vs q-err
 
 Files: `run_pg.py` (driver: per-query slice injection + `EXPLAIN ANALYZE`), `analyze_pg.py` (predictors vs
 runtime regret), `run_ppc.py`/`analyze_ppc.py` (the PPC attempt), `vm_setup.sh` (one-shot PG build + load).
+
+## The PostgreSQL patch (attribution)
+
+The cardinality-injection patch (`benchmark.patch`) and the patched-PG Dockerfile are **not vendored here**
+— they belong to the upstream
+[End-to-End-CardEst-Benchmark](https://github.com/Nathaniel-Han/End-to-End-CardEst-Benchmark) (Han/Zhu et
+al., VLDB 2022) under their own license. `vm_setup.sh` and `scripts/fetch_data.sh` clone that repo and apply
+its patch, pinned to commit `670cb8d` for reproducibility. We only change `FROM debian:buster` →
+`bullseye` (buster's apt repos are archived). All credit for the injectable PostgreSQL build is theirs.

@@ -4,7 +4,11 @@ set -e
 D=~/exp/data
 mkdir -p "$D/costmodel-scratch"; chmod 777 "$D/costmodel-scratch"
 BENCH="$D/End-to-End-CardEst-Benchmark"
-[ -d "$BENCH" ] || git clone --depth 1 https://github.com/Nathaniel-Han/End-to-End-CardEst-Benchmark.git "$BENCH"
+BENCH_COMMIT=670cb8d4bf4cbfa32f94fdf17f33973d3fd67d1b   # pinned for reproducibility (the version we used)
+if [ ! -d "$BENCH" ]; then
+  git clone https://github.com/Nathaniel-Han/End-to-End-CardEst-Benchmark.git "$BENCH"
+  git -C "$BENCH" checkout "$BENCH_COMMIT"
+fi
 
 echo "=== prep patched PG source ==="
 mkdir -p ~/pgbuild && cd ~/pgbuild
